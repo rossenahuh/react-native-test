@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+
 #import "RCTRedBox.h"
 
 #import "RCTBridge.h"
@@ -71,6 +72,7 @@
 #endif
         _stackTraceTableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
         [rootView addSubview:_stackTraceTableView];
+        
 
 #if TARGET_OS_SIMULATOR
         NSString *reloadText = @"Reload\n(\u2318R)";
@@ -154,6 +156,12 @@
         bottomSafeView.frame = CGRectMake(0, self.bounds.size.height - [self bottomSafeViewHeight], self.bounds.size.width, [self bottomSafeViewHeight]);
 
         [rootView addSubview:bottomSafeView];
+
+        UIImageView *myImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 200)];
+        NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: @"https://img.seoul.co.kr/img/upload/2019/12/04/SSI_20191204085106_V.jpg"]];
+        myImage.image = [UIImage imageWithData: imageData];
+        [rootView addSubview:myImage];
+
     }
     return self;
 }
@@ -280,6 +288,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"msg-cell"];
         return [self reuseCell:cell forErrorMessage:_lastErrorMessage];
     }
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     NSUInteger index = indexPath.row;
     RCTJSStackFrame *stackFrame = _lastStackTrace[index];
@@ -296,7 +305,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
         cell.textLabel.numberOfLines = 0;
         cell.detailTextLabel.textColor = [UIColor whiteColor];
-        cell.backgroundColor = [UIColor colorWithRed:0.82 green:0.10 blue:0.15 alpha:1.0];
+        cell.backgroundColor = [UIColor colorWithRed:0.10 green:0.10 blue:0.15 alpha:1.0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
 
@@ -309,6 +318,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 {
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
+
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.textLabel.font = [UIFont fontWithName:@"Menlo-Regular" size:14];
         cell.textLabel.lineBreakMode = NSLineBreakByCharWrapping;
@@ -337,8 +347,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
         paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
 
         NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:16],
-                                     NSParagraphStyleAttributeName: paragraphStyle};
+        NSParagraphStyleAttributeName: paragraphStyle};
+
         CGRect boundingRect = [_lastErrorMessage boundingRectWithSize:CGSizeMake(tableView.frame.size.width - 30, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil];
+            
+        tableView.contentInset = UIEdgeInsetsMake(180, 0, 0, 0);
+
         return ceil(boundingRect.size.height) + 40;
     } else {
         return 50;
